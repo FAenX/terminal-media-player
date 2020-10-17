@@ -1,0 +1,5 @@
+venv
+playlist.txt
+pre-playlist.txt
+cached-playlist.txt
+__pycache__
