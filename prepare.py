@@ -1,26 +1,36 @@
 import os
+import sys
 from files import FileFunctions
 
+files = os.listdir(os.path.curdir)
 
 #  ensure playlist.txt and pre-playlist.txt exists
-def checkPlaylistFilesExists(path):    
-    files = os.listdir(os.path.curdir)
+def prepare_folder(path):    
+    musicDir = path  
+    l_files = FileFunctions(musicDir).getSongList()
+    with open('playlist.txt', 'w') as playlist:
+        for file in l_files:
+            playlist.write(file + '\n')
+        # launch player
+    launch_player()
 
-    if 'pre-playlist.txt' in os.listdir(os.path.curdir):
-        os.rename('pre-playlist.txt', 'playlist.txt')
+def single_song(path):
+    with open('playlist.txt', 'w') as playlist:       
+        playlist.write(path)
+        # launch player
+    launch_player()
 
-    else: 
-        musicDir = path  
-        fileFunctions = FileFunctions(musicDir)
-        with open('playlist.txt', 'w') as playlist:
-            #pick random song
-            try:
-                playlist.write(fileFunctions.findRandomSong())
-            except Exception as e:
-                raise e
-   
-    player = os.execl('./player.sh', 'bash' )
-    return 0
+def cached():
+    if 'cached-playlist.txt' in files:
+        os.rename('cached-playlist.txt', 'playlist.txt')
+        launch_player()
+    else:
+        print('no cached playlist')
+        sys.exit()       
+
+
+def launch_player():
+    return os.execl('./player.sh', 'bash' )
 
 
 
